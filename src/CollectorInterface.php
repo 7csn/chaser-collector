@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace chaser\collector;
 
 /**
- * 数据收集器接口
+ * 数据收集器
  *
  * @package chaser\collector
  */
@@ -15,43 +15,39 @@ interface CollectorInterface
      * 获取数据
      *
      * @param string $keys
-     * @param mixed|null $default
+     * @param mixed $default
      * @return mixed
      */
-    public function get(string $keys, $default = null);
+    public function get(string $keys, mixed $default = null): mixed;
 
     /**
-     * 获取数据（不存在执行闭包设置）
+     * 获取数据（不存在则添加）
      *
      * @param string $keys
-     * @param callable $closure
+     * @param mixed $value
      * @return mixed
      */
-    public function getOrSet(string $keys, callable $closure);
+    public function getOrSet(string $keys, mixed $value): mixed;
 
     /**
      * 设置数据
      *
      * @param string $keys
      * @param mixed $value
-     * @return mixed
      */
-    public function set(string $keys, $value);
+    public function set(string $keys, mixed $value): void;
 
     /**
      * 删除数据
      *
      * @param string $keys
-     * @return mixed
      */
-    public function unset(string $keys);
+    public function unset(string $keys): void;
 
     /**
      * 清空数据集
-     *
-     * @return mixed
      */
-    public function clear();
+    public function clear(): void;
 
     /**
      * 获取数据集

@@ -3,7 +3,7 @@
   "description": "数据收集器",
   "type": "library",
   "require": {
-    "php": ">=7.4.0"
+    "php": "^8.0"
   },
   "license": "MIT",
   "authors": [
@@ -14,7 +14,7 @@
   ],
   "autoload": {
     "psr-4": {
-      "chaser\\collector\\": ""
+      "chaser\\collector\\": "src/"
     }
   }
 }

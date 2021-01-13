@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace chaser\collector;
 
 use ArrayAccess;
+use Closure;
 
 /**
  * 数据收集器类
@@ -23,7 +24,7 @@ class Collector implements CollectorInterface
     /**
      * @inheritDoc
      */
-    public function get(string $keys, $default = null)
+    public function get(string $keys, mixed $default = null): mixed
     {
         $data = $this->dataset;
 
@@ -31,10 +32,10 @@ class Collector implements CollectorInterface
 
         do {
             if (!self::arrayAccessible($data) || !isset($data[$key])) {
-                return is_callable($default) ? $default() : $default;
+                return $default instanceof Closure ? $default() : $default;
             }
             $data = $data[$key];
-        } while (($key = strtok('.')) !== false);
+        } while (false !== $key = strtok('.'));
 
         return $data;
     }
@@ -42,15 +43,19 @@ class Collector implements CollectorInterface
     /**
      * @inheritDoc
      */
-    public function getOrSet(string $keys, callable $closure)
+    public function getOrSet(string $keys, mixed $value): mixed
     {
-        return $this->location($this->dataset, $keys, fn(&$data, $key) => $data[$key] ??= $closure());
+        return $this->location(
+            $this->dataset,
+            $keys,
+            fn(&$data, $key): mixed => $data[$key] ??= $value instanceof Closure ? $value() : $value
+        );
     }
 
     /**
      * @inheritDoc
      */
-    public function set(string $keys, $value)
+    public function set(string $keys, mixed $value): void
     {
         $this->location($this->dataset, $keys, fn(&$data, $key): void => $data[$key] = $value);
     }
@@ -58,7 +63,7 @@ class Collector implements CollectorInterface
     /**
      * @inheritDoc
      */
-    public function unset(string $keys)
+    public function unset(string $keys): void
     {
         $this->location($this->dataset, $keys, function (&$data, $key) {
             unset($data[$key]);
@@ -68,7 +73,7 @@ class Collector implements CollectorInterface
     /**
      * @inheritDoc
      */
-    public function clear()
+    public function clear(): void
     {
         $this->dataset = [];
     }
@@ -110,9 +115,9 @@ class Collector implements CollectorInterface
      * @param string $keys
      * @param callable $callback
      * @param bool $whole
-     * @return mixed|null
+     * @return mixed
      */
-    protected static function location(array &$data, string $keys, callable $callback, bool $whole = true)
+    private function location(array &$data, string $keys, callable $callback, bool $whole = true): mixed
     {
         $keys = explode('.', $keys);
         $count = count($keys);
@@ -137,7 +142,7 @@ class Collector implements CollectorInterface
      * @param mixed $data
      * @return bool
      */
-    protected static function arrayAccessible($data): bool
+    private function arrayAccessible(mixed $data): bool
     {
         return is_array($data) || $data instanceof ArrayAccess;
     }
