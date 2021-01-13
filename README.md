@@ -86,9 +86,9 @@ composer require 7csn/collector
 * 反序列化修改数据集合
 
     ```php
-    $collector->deserialize(string $data): bool
+    $collector->deserialize(string $data): bool;
     ```
 ### 注意事项
-* 存取数据不推荐：Closure、null
+* 存取数据不推荐类型：Closure、null
 * get() 不存在数据时，默认值为 Closure 类型则取调用结果
-* getOrSet() 不存在数据时，添加值为 Closure 类型则取回调结果
+* getOrSet() 不存在数据时，添加值为 Closure 类型则取调用结果
