@@ -35,7 +35,7 @@ composer require 7csn/collector
     $collector->set('a', 'a');
     $collector->set('b.c', 'b.c');
     ```
-* 读取（无则默认，）数据
+* 读取（无则默认）数据
 
     ```php
     $collecter->get(string $keys, mixed $default = null): mixed;
